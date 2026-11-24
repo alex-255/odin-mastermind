@@ -34,6 +34,7 @@ class Game
   end
 
   def take_response(guess)
+    guess = guess.dup
     response = []
     4.times do |index|
       if @board.code[index] == guess[index]
@@ -66,10 +67,27 @@ class Game
     p "Response: #{response}"
     response
   end
+
+  def play
+    self.board.render
+    12.times do |index|
+      guess = self.take_guess
+      response = self.take_response(guess)
+      p "Guess in play: #{guess}"
+      self.board.add_guess(guess, index)
+      self.board.add_response(response, index)
+      self.board.render
+      if response[0] == '_r' && response[1] == '_r' && response[2] == '_r' && response[3] == '_r'
+        puts "Player won the game! Congratulations!"
+        break
+      end
+      if index == 11 && !(response[0] == '_r' && response[1] == '_r' && response[2] == '_r' && response[3] == '_r')
+        puts "You loose."
+        break
+      end
+    end
+  end
 end
 
 game = Game.new
-game.board.render
-# game.board.add_guess(game.take_guess, 0)
-game.board.add_response(game.take_response(game.take_guess), 0)
-game.board.render
+game.play
