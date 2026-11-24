@@ -26,9 +26,14 @@ class Game
     self.number_to_code(guess)
   end
 
-  def take_guess_from_comp
-    guess_array = []
-    4.times { guess_array.push(['_r', '_g', '_b', '_y'].sample) }
+  def take_guess_from_comp(hint)
+    
+    guess_array = self.hint_for_comp(hint)
+    4.times do |index|
+      if guess_array[index].nil?
+        guess_array[index] = ['_r', '_g', '_b', '_y'].sample
+      end
+    end
     guess_array
   end
 
@@ -84,6 +89,16 @@ class Game
     response
   end
 
+  def hint_for_comp(guess)
+    response = [nil, nil, nil, nil]
+    4.times do |index|
+      if @board.code[index] == guess[index]
+        response[index] = guess[index]
+      end
+    end
+    response
+  end
+
   def play_as_solver
     self.board.render
     12.times do |index|
@@ -93,7 +108,7 @@ class Game
       self.board.add_response(response, index)
       self.board.render
       if response[0] == '_r' && response[1] == '_r' && response[2] == '_r' && response[3] == '_r'
-        puts 'Player won the game! Congratulations!'
+        puts 'You won the game! Congratulations!'
         break
       end
       if index == 11 && !(response[0] == '_r' && response[1] == '_r' && response[2] == '_r' && response[3] == '_r')
@@ -104,19 +119,21 @@ class Game
 
   def play_as_coder
     self.board.render
+    hint = [nil, nil, nil, nil]
     12.times do |index|
-      guess = self.take_guess_from_comp
+      guess = self.take_guess_from_comp(hint)
       response = self.take_response(guess)
       self.board.add_guess(guess, index)
       self.board.add_response(response, index)
       self.board.render
+      hint = self.hint_for_comp(guess)
       sleep 1
       if response[0] == '_r' && response[1] == '_r' && response[2] == '_r' && response[3] == '_r'
-        puts 'Computer won the game! Congratulations!'
+        puts 'Computer won the game!'
         break
       end
       if index == 11 && !(response[0] == '_r' && response[1] == '_r' && response[2] == '_r' && response[3] == '_r')
-        puts 'Computer looses. You won!'
+        puts 'Computer looses. You won! Congratulations!'
       end
     end
   end
