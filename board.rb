@@ -33,16 +33,15 @@ class Board
   end
 
   def add_guess(guess, index)
-    p "Guess in add_guess: #{guess}"
     @guesses[index] = guess
   end
 
   def add_response(response, index)
-    p "Add response: #{response}"
     @responses[index] = response
   end
 
   def render
+    puts
     puts '==Mastermind=='
     g = @guesses
     puts '1  2  3  4  5  6  7  8  9  10 11 12'
